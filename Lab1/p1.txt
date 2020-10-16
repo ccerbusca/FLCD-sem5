@@ -1,0 +1,22 @@
+
+
+def main(): void {
+    val x: Integer = int(input());
+    val y: Integer = int(input());
+    val z: Integer = int(input());
+
+    if (x > y) {
+        if (x > z) {
+            println(x);
+        } else {
+            println(z);
+        }
+    }
+    else {
+        if (y > z) {
+            println(y);
+        } else {
+            println(z);
+        }
+    }
+}

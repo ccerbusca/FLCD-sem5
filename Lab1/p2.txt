@@ -1,0 +1,10 @@
+def main(): void {
+    val x: Integer = int(input());
+
+    for (var i = 2; i * i <= x; i += 1)@forloop {
+        if (x % i == 0) {
+            println("prime");
+            break@forloop;
+        }
+    }
+}

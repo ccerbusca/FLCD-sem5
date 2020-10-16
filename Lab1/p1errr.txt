@@ -1,0 +1,9 @@
+def main(): void {
+    var s: Integer = 0;
+    val 3l: Array[Integer] = 1..100; //error, declared constant/variable name starts with a decimal
+
+    for (var i = 1; i < l.length i += 1) {  
+        s += l(i);
+    }
+    println(`Sum of numbers up to ${n} is ${s});// missing backtick
+}
