@@ -3,9 +3,9 @@ import sys
 import re
 
 reserved_words = ["var", "val", "def", "for", "while", "if", "else", "println", "print",
-"Char", "intinput", "input", "break", "String", "void", "Integer", "Boolean"]
+"Char", "intinput", "input", "break", "String", "void", "Integer", "Boolean", "Array"]
 reserved_ops = ["+", "-", "*", "/", "=", "==", "!=" , "<", "<=", ">", ">=", "+=", "-=", "*=", "/=",
- "%", "...", "@", "||", "&&", "[", "]", "{", "}", ";", " ", ":", "(", ")"]
+ "%", "..", "@", "||", "&&", "[", "]", "{", "}", ";", ":", "(", ")"]
 
 class PIF:
     def __init__(self):
@@ -21,8 +21,11 @@ def is_constant_or_identifier(token):
     try:
         int(token)
     except:
-        return re.match("^[0-9\"']", token) is None or re.match('^"[a-zA-Z0-9]+"$', token) is not None \
-                or re.match("^'[a-zA-Z0-9]'$", token) is not None
+        return re.match(r"^[0-9]", token) is None and \
+                (re.match(r'^".+"$', token) is not None \
+                    or re.match(r"^`.+`$", token) is not None \
+                    or re.match(r"^'.'$", token) is not None \
+                    or re.match(r'^.+$', token))
     return True
 
 
@@ -37,9 +40,27 @@ else:
         line = f.readline()
         while line:
             print(line)
-            split = re.split('([^"\'a-zA-Z0-9])', line)
+            split = re.findall(r'`.+`|".+"|\'.\'|[:;()\[\]\.\+\-\*/=!<>%@|&\(\)]|[^:;()\s\[\]\.\+\-\*/=!<>%@|&\(\)]+', line)
             split = list(filter(lambda x: x is not None and x != '', map(lambda x: x.strip(), split)))
             print(split)
+
+            i = 0
+            while i < len(split) - 1:
+                if split[i] in ('=', '!', '<', '>', '+', '-', '*', '/'):
+                    if split[i + 1] == '=':
+                        split[i] = '=='
+                        del split[i + 1]
+                if split[i] == '.' and split[i + 1] == '.':
+                    split[i] = '..'
+                    del split[i + 1]
+                if split[i] == '|' and split[i + 1] == '|':
+                    split[i] = '||'
+                    del split[i + 1]
+                if split[i] == '&' and split[i + 1] == '&':
+                    split[i] = '&&'
+                    del split[i + 1]
+                i += 1
+
 
             for token in split:
                 if token in reserved_words or token in reserved_ops:
